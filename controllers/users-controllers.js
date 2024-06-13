@@ -28,6 +28,10 @@ const signup = async (req ,res,next) =>{
         return res.status(422).json({ errors: errors.array() });
     }
     const {email,password,name} = req.body;
+    const existing = await User .findOne({ email: email });
+    if (existing) {
+        return res.json({message: 'User already exists!', success: false});
+    }
     const hashPassword = await bcrypt.hash(password, 12);
     const newUser = new User({
         email,
